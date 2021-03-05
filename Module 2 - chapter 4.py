@@ -58,3 +58,67 @@ house = [["hallway", 11.25],
 # Build a for loop from scratch
 for room in house:
     print("the " + str(room[0]) + " is " + str(room[1]) + " sqm")
+
+############################
+# Definition of dictionary
+europe = {'spain': 'madrid', 'france': 'paris', 'germany': 'berlin',
+          'norway': 'oslo', 'italy': 'rome', 'poland': 'warsaw', 'austria': 'vienna'}
+
+# Iterate over europe
+for i, j in europe.items():
+    print("the capital of " + i + " is " + j)
+
+###############################
+# # Import numpy as np
+# import numpy as np
+#
+# # For loop over np_height
+# for h in np.nditer(np_height):
+#     print(str(h)+" inches")
+#
+# # For loop over np_baseball
+# for i in np.nditer(np_baseball):
+#     print(i)
+
+#######################################
+# Import cars data
+import pandas as pd
+cars = pd.read_csv('cars.csv', index_col = 0)
+
+# Iterate over rows of cars
+for lab, row in cars.iterrows():
+    print(lab)
+    print(row)
+##########################################
+# Import cars data
+import pandas as pd
+
+cars = pd.read_csv('cars.csv', index_col=0)
+
+# Adapt for loop
+for lab, row in cars.iterrows():
+    print(str(lab) + ": " + str(row['cars_per_cap']))
+
+##########################################
+# Import cars data
+import pandas as pd
+cars = pd.read_csv('cars.csv', index_col = 0)
+
+# Code for loop that adds COUNTRY column
+for lab, row in cars.iterrows():
+    cars.loc[lab,"COUNTRY"]= row["country"].upper()
+
+
+# Print cars
+print(cars)
+
+########################################
+# Import cars data
+import pandas as pd
+cars = pd.read_csv('cars.csv', index_col = 0)
+
+# Use .apply(str.upper)
+
+
+cars["COUNTRY"]=cars["country"].apply(str.upper)
+print(cars)
