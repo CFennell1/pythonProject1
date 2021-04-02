@@ -51,3 +51,16 @@ print('wards_census table shape:', wards_census.shape)
 #
 # # Print the shape of wards_census_altered
 # print('wards_census_altered table shape:', wards_census_altered.shape)
+
+#################
+# Merge the licenses and biz_owners table on account
+licenses_owners = licenses.merge(biz_owners,on='account')
+
+# Group the results by title then count the number of accounts
+counted_df = licenses_owners.groupby('title').agg({'account':'count'})
+
+# Sort the counted_df in desending order
+sorted_df = counted_df.sort_values('account', ascending = False)
+
+# Use .head() method to print the first few rows of sorted_df
+print(sorted_df.head())
