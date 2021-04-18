@@ -2,6 +2,7 @@
 # Import necessary module
 from sqlalchemy import create_engine
 import pandas as pd
+import numpy as np
 
 # Create engine: engine
 engine = create_engine('sqlite:///basketball.sqlite')
@@ -83,8 +84,29 @@ df_team.columns=rs.keys()
 # Close connection
 
 print(df_team.head())
-df_team_updated = df_team.merge(df2,left_on="full_name",right_on="nameTeam",)
+df_team_updated = df_team.merge(df2,left_on="full_name",right_on="nameTeam",how="left",)
 print(df_team_updated.head())
 print(df_team_updated.shape)
 
-#taxi_own_veh = taxi_owners.merge(taxi_veh, on='vid', suffixes=('_own','_veh'))
+
+#update to fix up errors
+df_team_updated=df_team_updated.fillna(0)
+print(df_team_updated.head(31))
+print(df_team_updated.shape)
+
+# player info on number 1 pick
+print(df1.head())
+print(df1.columns)
+
+rs=con.execute(("Select * from Player_Attributes"))
+df_Player_Attributes = pd.DataFrame(rs.fetchall())
+df_Player_Attributes.columns=rs.keys()
+print(df_Player_Attributes.head())
+print(df_Player_Attributes.columns)
+
+
+df_Num1_Player_Info=pd.concat([df_Player_Attributes,df1],keys=["ID", "idPlayer"])
+#df_Num1_Player_Info=df1.merge(df_Player_Attributes,left_on="idPlayer", right_on="ID", how ="left")
+print(df_Num1_Player_Info.head())
+print(df_Num1_Player_Info.columns)
+print(df_Num1_Player_Info.shape)
