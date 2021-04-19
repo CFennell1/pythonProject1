@@ -110,3 +110,25 @@ df_Num1_Player_Info=pd.concat([df_Player_Attributes,df1],keys=["ID", "idPlayer"]
 print(df_Num1_Player_Info.head())
 print(df_Num1_Player_Info.columns)
 print(df_Num1_Player_Info.shape)
+
+#picks=df_Num1_Player_Info["DRAFT_NUMBER"].unique()
+print(df_Num1_Player_Info.iloc[2,:])#good
+#print(df_Num1_Player_Info.loc[12,'DRAFT_NUMBER'])
+draft_number_index = df_Num1_Player_Info.columns.get_loc('DRAFT_NUMBER')
+print(draft_number_index)
+
+i=0
+print(df_Num1_Player_Info.iloc[i,draft_number_index])
+for index,row in df_Num1_Player_Info.iterrows():
+    i=i+1
+    if int(df_Num1_Player_Info.iloc[i,draft_number_index])=='None':
+        print("Hi")
+    elif int(df_Num1_Player_Info.iloc[i, draft_number_index]) <11:
+        print(i)
+    else:
+        print("do nothing")
+
+
+#df_top_ten = df_Num1_Player_Info[df_Num1_Player_Info["DRAFT_NUMBER"]==10]
+
+#print(df_top_ten.head())
