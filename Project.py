@@ -116,19 +116,31 @@ print(df_Num1_Player_Info.iloc[2,:])#good
 #print(df_Num1_Player_Info.loc[12,'DRAFT_NUMBER'])
 draft_number_index = df_Num1_Player_Info.columns.get_loc('DRAFT_NUMBER')
 print(draft_number_index)
+print(df_Num1_Player_Info.index)
+print(df_Player_Attributes.index)
 
 i=0
-print(df_Num1_Player_Info.iloc[i,draft_number_index])
-for index,row in df_Num1_Player_Info.iterrows():
-    i=i+1
-    if int(df_Num1_Player_Info.iloc[i,draft_number_index])=='None':
-        print("Hi")
-    elif int(df_Num1_Player_Info.iloc[i, draft_number_index]) <11:
-        print(i)
-    else:
-        print("do nothing")
+# print(df_Num1_Player_Info.iloc[i,draft_number_index])
+# for index,row in df_Num1_Player_Info.iterrows():
+#     i=i+1
+#     if int(df_Num1_Player_Info.iloc[i,draft_number_index])=='None':
+#         print("Hi")
+#     elif int(df_Num1_Player_Info.iloc[i, draft_number_index]) <11:
+#         print(i)
+#     else:
+#         print("do nothing")
 
+df_Player_Attributes = df_Player_Attributes[df_Player_Attributes["DRAFT_NUMBER"]!="None"]
+print(df_Player_Attributes.shape)
+print(df_Player_Attributes.head())
+draft_number_index = df_Player_Attributes.columns.get_loc('DRAFT_NUMBER')
+print(draft_number_index)
 
-#df_top_ten = df_Num1_Player_Info[df_Num1_Player_Info["DRAFT_NUMBER"]==10]
+for index, row in df_Player_Attributes.iterrows():
+    if int(df_Player_Attributes.iloc[row,draft_number_index])<11:
+        df_Top_Ten_Pick=df_Top_Ten_Pick+df_Player_Attributes.iloc[row,31]
 
+#df_top_ten = df_Player_Attributes[int(df_Player_Attributes["DRAFT_NUMBER"])<=10]
+print(df_top_ten.head())
+print(df+df_top_ten.shape)
 #print(df_top_ten.head())
