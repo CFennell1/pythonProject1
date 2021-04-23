@@ -62,49 +62,107 @@ print(df_Active_Players.head())
 print(df_Active_Players.shape)
 print(df_Active_Players["SCHOOL"].head())
 
-max_height =0.00
+max_height = 0.00
+min_height = 3.00
 row_range = 0
+min_height_row_range = 0
 print(row_range)
 print(max_height)
 height_col = df_Active_Players.columns.get_loc("HEIGHT_m")
 print(height_col)
-print(df_Active_Players.iloc[0,height_col])
-print(df_Active_Players.iloc[1,height_col])
-#print(df_Active_Players["HEIGHT_m"].column)
-#print(df_Active_Players.iloc[[0,df_Active_Players["HEIGHT_m"].column]])
-for i in range(409):
-    #print(i)
-    if df_Active_Players.iloc[i,height_col]>max_height:
-        row_range=i
-        max_height=df_Active_Players.iloc[i,height_col]
-
+print(df_Active_Players.iloc[0, height_col])
+print(df_Active_Players.iloc[1, height_col])
+# print(df_Active_Players["HEIGHT_m"].column)
+# print(df_Active_Players.iloc[[0,df_Active_Players["HEIGHT_m"].column]])
+# for i in range(409):
+for i in range(0, df_Active_Players.shape[0]):
+    # print(i)
+    if df_Active_Players.iloc[i, height_col] > max_height:
+        row_range = i
+        max_height = df_Active_Players.iloc[i, height_col]
+    if df_Active_Players.iloc[i, height_col] < min_height:
+        min_height_row_range = i
+        min_height = df_Active_Players.iloc[i, height_col]
 print(row_range)
-max_height=max_height.round(2)
+print(min_height_row_range)
+max_height = max_height.round(2)
+min_height = min_height.round(2)
 print(max_height)
-first_name=df_Active_Players.iloc[row_range,df_Active_Players.columns.get_loc("FIRST_NAME")]
-last_name=df_Active_Players.iloc[row_range,df_Active_Players.columns.get_loc("LAST_NAME")]
-team_city=df_Active_Players.iloc[row_range,df_Active_Players.columns.get_loc("TEAM_CITY")]
-team_name=df_Active_Players.iloc[row_range,df_Active_Players.columns.get_loc("TEAM_NAME")]
-print(df_Active_Players.iloc[row_range,4])
+first_name = df_Active_Players.iloc[row_range, df_Active_Players.columns.get_loc("FIRST_NAME")]
+last_name = df_Active_Players.iloc[row_range, df_Active_Players.columns.get_loc("LAST_NAME")]
+team_city = df_Active_Players.iloc[row_range, df_Active_Players.columns.get_loc("TEAM_CITY")]
+team_name = df_Active_Players.iloc[row_range, df_Active_Players.columns.get_loc("TEAM_NAME")]
+print(df_Active_Players.iloc[row_range, 4])
 print(first_name)
 print(last_name)
 print(team_city)
 print(team_name)
-print("The tallest player in the NBA is " +str(first_name)+" "+str(last_name)+" who plays for the "+str(team_city)+" "+str(team_name)+". He is "+str(max_height)+" metres in height.")
-#df_unique_school = df_Active_Players["SCHOOL"].unique()
+print("The tallest player in the NBA is " + str(first_name) + " " + str(last_name) + " who plays for the " + str(
+    team_city) + " " + str(team_name) + ". He is " + str(max_height) + " metres in height.")
 
-#nique_schools = df_unique_school.shape
-#df_school = df_Active_Players["SCHOOL"]
-#print(df_school.head())
-#print(df_school.shape)
+first_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("FIRST_NAME")]
+last_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("LAST_NAME")]
+team_city = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("TEAM_CITY")]
+team_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("TEAM_NAME")]
+print("The shortest player in the NBA is " + str(first_name) + " " + str(last_name) + " who plays for the " + str(
+    team_city) + " " + str(team_name) + ". He is " + str(min_height) + " metres in height.")
+
+df_Active_Players.to_csv(r'C:\Users\colin.fennell\Documents\df_Active_Players.csv')
+print(i)
+# df_unique_school = df_Active_Players["SCHOOL"].unique()
+
+# nique_schools = df_unique_school.shape
+# df_school = df_Active_Players["SCHOOL"]
+# print(df_school.head())
+# print(df_school.shape)
 
 # df_school["Num_Players"]=df_school.groupby["SCHOOL"].count()
-#print(df_school.head(10))
+# print(df_school.head(10))
 
 # for i in range(0,df_unique_school.shape[0]):
 #    df_unique_school["Player_Count"]=i
 #    print(i)
 
-#print(df_unique_school.head())
-#print(df_unique_school.index)
-#print(df_unique_school.iloc[[10]:])
+# print(df_unique_school.head())
+# print(df_unique_school.index)
+# print(df_unique_school.iloc[[10]:])
+
+max_height = 0.00
+min_height = 3.0
+max_weight = 0.00
+min_weight = 1000
+max_bmi = 0
+min_bmi = 100
+height_col = 0
+
+player_stats = ["max height", max_height, "min height", min_height, "max weight", max_weight, "max bmi", max_bmi,
+                "min bmi", min_bmi]
+print(player_stats)
+max_height_player_details = ["first name", "", "last name", "", "team", "", "city", ""]
+min_height_player_details = ["first name", "", "last name", "", "team", "", "city", ""]
+# max_weight_player_details = ["first name", "", "last name", "", "team", "", "city", ""]
+# min_weight_player_details = ["first name", "", "last name", "", "team", "", "city", ""]
+# max_bmi_player_details = ["first name", "", "last name", "", "team", "", "city", ""]
+# min_bmi_player_details = ["first name", "", "last name", "", "team", "", "city", ""]
+print(max_height_player_details)
+print(player_stats[1])
+for i in range(0, df_Active_Players.shape[0]):
+    print(i)
+    if df_Active_Players.iloc[i, height_col] > player_stats[[1]]:
+        player_stats[1] = df_Active_Players.iloc[i, height_col]
+        max_height_player_details[1] = df_Active_Players.iloc[
+            player_stats[1], df_Active_Players.columns.get_loc("FIRST_NAME")]
+        max_height_player_details[3] = df_Active_Players.iloc[
+            player_stats[1], df_Active_Players.columns.get_loc("LAST_NAME")]
+        max_height_player_details[5] = df_Active_Players.iloc[
+            player_stats[1], df_Active_Players.columns.get_loc("TEAM_NAME")]
+        max_height_player_details[7] = df_Active_Players.iloc[
+            player_stats[1], df_Active_Players.columns.get_loc("TEAM_CITY")]
+    if df_Active_Players.iloc[i, height_col] < min_height:
+        min_height_row_range = i
+        min_height = df_Active_Players.iloc[i, height_col]
+
+print(player_stats[1])
+print(max_height_player_details)
+
+
