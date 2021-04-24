@@ -107,7 +107,7 @@ team_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.colum
 print("The shortest player in the NBA is " + str(first_name) + " " + str(last_name) + " who plays for the " + str(
     team_city) + " " + str(team_name) + ". He is " + str(min_height) + " metres in height.")
 
-df_Active_Players.to_csv(r'C:\Users\colin.fennell\Documents\df_Active_Players.csv')
+#df_Active_Players.to_csv(r'C:\Users\colin.fennell\Documents\df_Active_Players.csv')
 print(i)
 # df_unique_school = df_Active_Players["SCHOOL"].unique()
 
@@ -164,5 +164,8 @@ for i in range(0, df_Active_Players.shape[0]):
 
 print(player_stats[1])
 print(max_height_player_details)
+
+
+####################################################
 
 

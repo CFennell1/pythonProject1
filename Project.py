@@ -72,7 +72,7 @@ print(df2.columns)
 
 
 import matplotlib.pyplot as plt
-
+plt.tight_layout()
 df2.plot(x="Team Name", y ="Count of Number 1 Picks",kind="bar", title="Number 1 picks by Team")
 plt.show()
 
