@@ -103,7 +103,6 @@ print(df_Summary_BMI)
 #Let us look at height per position
 df_Position_Data = df_All_Player_Data.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
 print(df_Position_Data)
-print(df_Position_Data.shape)
 
 
 # Consider currently active players
@@ -112,7 +111,108 @@ df_Active_Players = df_All_Player_Data[df_All_Player_Data["ROSTERSTATUS"] == "Ac
 # Height per position for active players
 df_Active_Position_Data = df_Active_Players.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
 print(df_Active_Position_Data)
-print(df_Active_Position_Data.shape)
-print((df_Active_Position_Data.columns))
+
+# Look to see who is the tallest and shortest current NBA players
+
+max_height = 0.00
+min_height = 3.00
+max_height_row_range = 0
+min_height_row_range = 0
+
+height_col = df_Active_Players.columns.get_loc("HEIGHT_m")
 
 
+for i in range(0, df_Active_Players.shape[0]):
+
+    if df_Active_Players.iloc[i, height_col] > max_height:
+        max_height_row_range = i
+        max_height = df_Active_Players.iloc[i, height_col]
+
+    if df_Active_Players.iloc[i, height_col] < min_height:
+        min_height_row_range = i
+        min_height = df_Active_Players.iloc[i, height_col]
+
+
+max_height = max_height.round(2)
+min_height = min_height.round(2)
+
+first_name = df_Active_Players.iloc[max_height_row_range, df_Active_Players.columns.get_loc("FIRST_NAME")]
+last_name = df_Active_Players.iloc[max_height_row_range, df_Active_Players.columns.get_loc("LAST_NAME")]
+team_city = df_Active_Players.iloc[max_height_row_range, df_Active_Players.columns.get_loc("TEAM_CITY")]
+team_name = df_Active_Players.iloc[max_height_row_range, df_Active_Players.columns.get_loc("TEAM_NAME")]
+
+print("The tallest player in the NBA is " + str(first_name) + " " + str(last_name) + " who plays for the " + str(
+     team_city) + " " + str(team_name) + ". He is " + str(max_height) + " metres in height.")
+
+first_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("FIRST_NAME")]
+last_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("LAST_NAME")]
+team_city = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("TEAM_CITY")]
+team_name = df_Active_Players.iloc[min_height_row_range, df_Active_Players.columns.get_loc("TEAM_NAME")]
+
+print("The shortest player in the NBA is " + str(first_name) + " " + str(last_name) + " who plays for the " + str(
+     team_city) + " " + str(team_name) + ". He is " + str(min_height) + " metres in height.")
+
+
+# Save the active players dataframe to a csv file
+df_Active_Players.to_csv(r'C:\Users\colin.fennell\Documents\df_Active_Players.csv')
+
+
+# Read back in the csv and call it Player_Info
+df_Player_Info = pd.read_csv("df_Active_Players.csv",)
+print(df_Player_Info.head())
+
+# Remove players that were not drafted
+Not_drafted = ["None","Undrafted"]
+df_Player_Info_Drafted = df_Player_Info[~df_Player_Info["DRAFT_NUMBER"].str.contains('|'.join(Not_drafted))]
+
+print(df_Player_Info_Drafted.shape)
+
+# Consider players that were drafted in the top 5
+df_Player_Info_Top5 = df_Player_Info_Drafted[df_Player_Info_Drafted["DRAFT_NUMBER"].astype(int)<=5]
+df_Player_Info_Top5.sort_values(by=["DRAFT_NUMBER"],ascending=True)
+
+print(df_Player_Info_Top5.shape)
+print(df_Player_Info_Top5.head())
+
+
+# See which school has the most top 5 draft picks
+g = sns.catplot(kind="count", x="SCHOOL", data=df_Player_Info_Top5,order=df_Player_Info_Top5["SCHOOL"].value_counts().index,palette=["#39A7D0","#36ADA4"])
+g.set_xticklabels(rotation =90)
+plt.title("Number of Top 5 Draft Picks per School")
+plt.tight_layout()
+plt.show()
+
+# Prepare a list to use when for ordering when producing graphs
+draft_pick_order =[]
+for i in range(5):
+    draft_pick_order = draft_pick_order+[""+str(i+1)+""]
+
+sns.set_style("darkgrid")
+
+# box plot to look at points for the top 5 draft picks
+
+sns.catplot(kind="box",x="DRAFT_NUMBER", y="PTS", data=df_Player_Info_Top5,order = draft_pick_order, whis=[0, 100])
+plt.ylim(0,40)
+plt.ylabel=("Average Points per Game")
+plt.show()
+
+
+# Consider points, assists and rebounds added together
+df_Player_Info_Top5["Combined_PTS_AST_REB"] = df_Player_Info_Top5["PTS"] + df_Player_Info_Top5["AST"] + df_Player_Info_Top5["REB"]
+
+
+sns.catplot(kind="box",x="DRAFT_NUMBER", y="Combined_PTS_AST_REB", data=df_Player_Info_Top5,order = draft_pick_order, whis=[0, 100])
+plt.show()
+
+sns.relplot(y="SCHOOL", x="PTS",
+            data=df_Player_Info_Top5, kind="scatter",
+            ci=None,
+            hue="DRAFT_NUMBER",markers=True, dashes = False, row_order = draft_pick_order)
+
+plt.show()
+
+print(df_Player_Info_Top5.head())
+# (x="DRAFT_NUMBER", y="PTS",
+#             data=df_Player_Info_Top5, kind="line",
+#             ci=None,
+#             hue="DRAFT_NUMBER",markers=True, dashes = False)
