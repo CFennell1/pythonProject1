@@ -64,7 +64,55 @@ df_Team_Updated=df_Team_Updated.fillna(0)
 print(df_Team_Updated.head())
 print(df_Team_Updated.shape)
 
+#Print out the teams that have never had the number 1 pick
 print ("The teams that never had the number 1 pick are as follows:")
 for i, row in df_Team_Updated.iterrows():
     if row["numberPickOverall"]==0:
         print(row["full_name"])
+
+
+##############################################################################
+# Now we will look at some player attributes
+with engine.connect() as con:
+    rs = con.execute("SELECT * FROM Player_Attributes")
+    df_All_Player_Data = pd.DataFrame(rs.fetchall())
+    df_All_Player_Data.columns = rs.keys()
+
+
+# Create columns to show the height and weight of players in metric format
+df_All_Player_Data["HEIGHT_m"] = df_All_Player_Data["HEIGHT"] * 0.0254
+df_All_Player_Data["WEIGHT_kg"] = df_All_Player_Data["WEIGHT"] * 0.454
+
+# Create a function to calculate BMI
+def bmi(w, h):
+    return w / h ** 2
+
+# Use the BMI function to add in a BMI column to the dataframe
+df_All_Player_Data["BMI"] = bmi(df_All_Player_Data["WEIGHT_kg"], df_All_Player_Data["HEIGHT_m"])
+
+
+#Use numpy to calculate summary stats for height, weight and BMI for all players all time
+df_Summary_Height_Data = df_All_Player_Data["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
+df_Summary_Weight_Data = df_All_Player_Data["WEIGHT_kg"].agg([np.min, np.max, np.mean, np.median])
+df_Summary_BMI = df_All_Player_Data["BMI"].agg([np.min, np.max, np.mean, np.median])
+
+print(df_Summary_Height_Data)
+print(df_Summary_Weight_Data)
+print(df_Summary_BMI)
+
+#Let us look at height per position
+df_Position_Data = df_All_Player_Data.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
+print(df_Position_Data)
+print(df_Position_Data.shape)
+
+
+# Consider currently active players
+df_Active_Players = df_All_Player_Data[df_All_Player_Data["ROSTERSTATUS"] == "Active"]
+
+# Height per position for active players
+df_Active_Position_Data = df_Active_Players.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
+print(df_Active_Position_Data)
+print(df_Active_Position_Data.shape)
+print((df_Active_Position_Data.columns))
+
+
