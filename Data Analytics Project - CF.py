@@ -3,6 +3,8 @@
 from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Create engine: engine
 engine = create_engine('sqlite:///basketball.sqlite')
@@ -45,26 +47,24 @@ print(df_Num1_Post_1970)
 print(df_Num1_Post_1970.columns)
 
 
-import matplotlib.pyplot as plt
+#show a bar chart of the number 1 picks per team
+df_Num1_Post_1970.plot(x="Team Name", y ="Count of Number 1 Picks",kind = "bar", title = "Number 1 picks by Team since 1970", xlabel = "Team Name")
 plt.tight_layout()
-df_Num1_Post_1970.plot(x="Team Name", y ="Count of Number 1 Picks",kind="bar", title="Number 1 picks by Team")
 plt.show()
 
 
-########################################
-#merge this to the teams
-rs=con.execute(("Select * from Team"))
-df_team = pd.DataFrame(rs.fetchall())
-df_team.columns=rs.keys()
-# Close connection
-
-print(df_team.head())
-df_team_updated = df_team.merge(df2,left_on="full_name",right_on="nameTeam",how="left",)
-print(df_team_updated.head())
-print(df_team_updated.shape)
+#merge the team data with the number 1 picks data
+df_Team_Updated = df_Team.merge(df_Num1_Post_1970, left_on = "full_name", right_on = "nameTeam", how = "left",)
+print(df_Team_Updated.head())
+print(df_Team_Updated.shape)
 
 
-#update to fix up errors
-df_team_updated=df_team_updated.fillna(0)
-print(df_team_updated.head(31))
-print(df_team_updated.shape)
+#Fix up errors for teams that have never had the number 1 pick
+df_Team_Updated=df_Team_Updated.fillna(0)
+print(df_Team_Updated.head())
+print(df_Team_Updated.shape)
+
+print ("The teams that never had the number 1 pick are as follows:")
+for i, row in df_Team_Updated.iterrows():
+    if row["numberPickOverall"]==0:
+        print(row["full_name"])
