@@ -169,11 +169,13 @@ print(df_Player_Info_Drafted.shape)
 
 # Consider players that were drafted in the top 5
 df_Player_Info_Top5 = df_Player_Info_Drafted[df_Player_Info_Drafted["DRAFT_NUMBER"].astype(int)<=5]
-df_Player_Info_Top5.sort_values(by=["DRAFT_NUMBER"],ascending=True)
+#df_Player_Info_Top5.DRAFT_NUMBER = df_Player_Info_Top5.DRAFT_NUMBER.astype(int)
+#df_Player_Info_Top5.sort_values(by=["DRAFT_NUMBER"],ascending=True)
 
 print(df_Player_Info_Top5.shape)
 print(df_Player_Info_Top5.head())
 
+sns.set_style("darkgrid")
 
 # See which school has the most top 5 draft picks
 g = sns.catplot(kind="count", x="SCHOOL", data=df_Player_Info_Top5,order=df_Player_Info_Top5["SCHOOL"].value_counts().index,palette=["#39A7D0","#36ADA4"])
@@ -187,13 +189,13 @@ draft_pick_order =[]
 for i in range(5):
     draft_pick_order = draft_pick_order+[""+str(i+1)+""]
 
-sns.set_style("darkgrid")
+
 
 # box plot to look at points for the top 5 draft picks
 
 sns.catplot(kind="box",x="DRAFT_NUMBER", y="PTS", data=df_Player_Info_Top5,order = draft_pick_order, whis=[0, 100])
 plt.ylim(0,40)
-plt.ylabel=("Average Points per Game")
+plt.title=("Average Points per Game")
 plt.show()
 
 
