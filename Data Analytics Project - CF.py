@@ -124,28 +124,28 @@ print(df_Active_Players.shape)
 df_Active_Position_Data = df_Active_Players.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
 print(df_Active_Position_Data)
 
-#df = pd.read_csv(s, index_col=0, delimiter=' ', skipinitialspace=True)
+fig = plt.figure()
 
-fig = plt.figure() # Create matplotlib figure
-
-ax = fig.add_subplot(111) # Create matplotlib axes
-ax2 = ax.twinx() # Create another axes that shares the same x-axis as ax.
+ax = fig.add_subplot()
+ax2 = ax.twinx()
 
 width = 0.4
 
-df_Position_Data.plot(kind='bar', y="mean", color='green', ax=ax, width=width, position=1)
-df_Active_Position_Data.plot(kind='bar', y="mean", color='yellow', ax=ax2, width=width, position=0)
+df_Position_Data.plot(kind='bar', y="mean", color='orange', ax=ax, width=width, position=1)
+df_Active_Position_Data.plot(kind='bar', y="mean", color='green', ax=ax2, width=width, position=0)
 
-ax.set(ylim=[1.5,2.25])
-ax2.set(ylim=[1.5,2.25])
-ax.set_ylabel('Overall')
-ax2.set_ylabel('Active')
-ax.legend("Historical Player Mean")
-ax2.legend("Current Player Mean")
+ax.set(ylim=[1.80,2.15])
+ax2.set(ylim=[1.80,2.15])
+ax.set(title = "Average Height per Position Historical vs Current Players")
+ax.set_ylabel('Historical Players Avg Height')
+ax2.set_ylabel('Current Players Avg Height')
+ax.legend(["Historical"], loc="upper center")
+ax2.legend(["Current"], loc = "upper right")
+fig.tight_layout()
 plt.show()
 
 # Look to see who is the tallest and shortest current NBA players
-
+# Initial values that will get updated
 max_height = 0.00
 min_height = 3.00
 max_height_row_range = 0
