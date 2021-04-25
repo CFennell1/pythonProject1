@@ -101,16 +101,48 @@ print(df_Summary_Weight_Data)
 print(df_Summary_BMI)
 
 #Let us look at height per position
-df_Position_Data = df_All_Player_Data.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
-print(df_Position_Data)
+print(df_All_Player_Data.shape)
 
+# Remove player data with no position value
+df_All_Player_Data = df_All_Player_Data[df_All_Player_Data.POSITION !=""]
+
+# Remove player data with no height value
+df_All_Player_Data = df_All_Player_Data[df_All_Player_Data.HEIGHT_m.notnull()]
+
+print(df_All_Player_Data.shape)
+
+df_Position_Data = df_All_Player_Data.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
+
+
+print(df_Position_Data)
 
 # Consider currently active players
 df_Active_Players = df_All_Player_Data[df_All_Player_Data["ROSTERSTATUS"] == "Active"]
 
+print(df_Active_Players.shape)
 # Height per position for active players
 df_Active_Position_Data = df_Active_Players.groupby("POSITION")["HEIGHT_m"].agg([np.min, np.max, np.mean, np.median])
 print(df_Active_Position_Data)
+
+#df = pd.read_csv(s, index_col=0, delimiter=' ', skipinitialspace=True)
+
+fig = plt.figure() # Create matplotlib figure
+
+ax = fig.add_subplot(111) # Create matplotlib axes
+ax2 = ax.twinx() # Create another axes that shares the same x-axis as ax.
+
+width = 0.4
+
+df_Position_Data.plot(kind='bar', y="mean", color='green', ax=ax, width=width, position=1)
+df_Active_Position_Data.plot(kind='bar', y="mean", color='yellow', ax=ax2, width=width, position=0)
+
+ax.set(ylim=[1.5,2.25])
+ax2.set(ylim=[1.5,2.25])
+ax.set_ylabel('Overall')
+ax2.set_ylabel('Active')
+ax.legend("Historical Player Mean")
+ax2.legend("Current Player Mean")
+plt.show()
 
 # Look to see who is the tallest and shortest current NBA players
 
@@ -170,7 +202,7 @@ print(df_Player_Info_Drafted.shape)
 # Consider players that were drafted in the top 5
 df_Player_Info_Top5 = df_Player_Info_Drafted[df_Player_Info_Drafted["DRAFT_NUMBER"].astype(int)<=5]
 #df_Player_Info_Top5.DRAFT_NUMBER = df_Player_Info_Top5.DRAFT_NUMBER.astype(int)
-#df_Player_Info_Top5.sort_values(by=["DRAFT_NUMBER"],ascending=True)
+#
 
 print(df_Player_Info_Top5.shape)
 print(df_Player_Info_Top5.head())
@@ -194,8 +226,9 @@ for i in range(5):
 # box plot to look at points for the top 5 draft picks
 
 sns.catplot(kind="box",x="DRAFT_NUMBER", y="PTS", data=df_Player_Info_Top5,order = draft_pick_order, whis=[0, 100])
-plt.ylim(0,40)
-plt.title=("Average Points per Game")
+plt.ylim(0,35)
+plt.ylabel("Points")
+plt.title("Average Points per Game")
 plt.show()
 
 
@@ -204,16 +237,22 @@ df_Player_Info_Top5["Combined_PTS_AST_REB"] = df_Player_Info_Top5["PTS"] + df_Pl
 
 
 sns.catplot(kind="box",x="DRAFT_NUMBER", y="Combined_PTS_AST_REB", data=df_Player_Info_Top5,order = draft_pick_order, whis=[0, 100])
+plt.ylim(0,50)
+plt.title("Combined Average Points, Rebounds and Assists per Game")
+plt.ylabel("Points + Rebounds + Assists")
 plt.show()
+
+df_Player_Info_Top5["DRAFT_NUMBER"]=pd.to_numeric((df_Player_Info_Top5["DRAFT_NUMBER"]))
 
 sns.relplot(y="SCHOOL", x="PTS",
             data=df_Player_Info_Top5, kind="scatter",
             ci=None,
-            hue="DRAFT_NUMBER",markers=True, dashes = False, row_order = draft_pick_order)
-
+            hue="DRAFT_NUMBER",markers=True, dashes = False, palette=sns.color_palette("coolwarm",n_colors=5))
+plt.title("Average Number of Points per Game per School/College" )
+plt.xlabel("Points per Game")
 plt.show()
 
-print(df_Player_Info_Top5.head())
+
 # (x="DRAFT_NUMBER", y="PTS",
 #             data=df_Player_Info_Top5, kind="line",
 #             ci=None,
